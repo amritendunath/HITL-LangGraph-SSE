@@ -1,3 +1,5 @@
-export default class assistantService{
+class assistantService{
 
 }
+
+export default assistantService
