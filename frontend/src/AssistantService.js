@@ -48,6 +48,21 @@ class assistantService {
             console.log("Error from server side", error)
         }
     }
+
+    static streamResponse(thread_id, onMessageCallback, onErrorCallback, onCompleteCallback){
+        const eventSource = new EventSource(`${BASE_URL}/graph/stream/${thread_id}`)
+
+        eventSource.addEventListener('token', (event)=>{
+            try {
+                const data = JSON.parse(event.data)
+                onMessageCallback({
+                    content: data.content
+                })
+            } catch (error) {
+                console.error("Error parsing token event:", error, "Raw data:", event.data)
+            }
+        })
+    }
 }
 
 
