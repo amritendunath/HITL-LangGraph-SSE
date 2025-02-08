@@ -25,9 +25,7 @@ class assistantService {
         }
     }
 
-    // static async submitReview({
 
-    // })
     //API Methods: SSE
     static async createStreamingConversation(human_req){
         try {
