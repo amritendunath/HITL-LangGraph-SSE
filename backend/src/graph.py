@@ -22,9 +22,38 @@ class DraftReviewState(MessagesState):
 
 def assistant_draft(state: DraftReviewState)-> DraftReviewState:
     user_message = HumanMessage(content=state["human_req"])
-    response = model.ainvoke(user_message)
+    system_message = SystemMessage(content=(f"""
+        You are an AI assistant revising your previous draft. 
+        
+        FEEDBACK FROM HUMAN: "{state["human_comment"]}"
+        
+        Carefully incorporate this feedback into your response. Address all comments, 
+        corrections, or suggestions. Ensure your revised response fully integrates 
+        the feedback, improves clarity, and resolves any issues raised.
+        
+        DO NOT repeat the feedback verbatim in your response.
+
+    """))
+
+    all_messages = [user_message] + [system_message]
+
+    response = model.ainvoke(all_messages)
 
     return {
-        "messages": user_message,
+        "messages": all_messages,
         "assistant_response": response.content
     }
+
+
+# --- Graph Construction ---
+builder=StateGraph(DraftReviewState)
+
+builder.add_node("assistant_draft", assistant_draft)
+builder.add_edge(START, 'assistant_draft')
+builder.add_edge('assistant_draft', END)
+
+memory = MemorySaver()
+
+graph = builder.compile(checkpointer=memory)
+
+# __all__ = ["graph", "DraftReviewState"]
