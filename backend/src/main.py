@@ -1,4 +1,4 @@
-from src.api.v1.endpoints import router
+from api.v1.endpoints import router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
