@@ -9,3 +9,4 @@ class ResumeRequest(BaseModel):
 
 class GraphResponse(BaseModel):
     thread_id: str
+
