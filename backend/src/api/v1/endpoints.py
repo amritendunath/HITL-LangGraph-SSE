@@ -51,4 +51,5 @@ async def stream_graph(request: Request, thread_id: str):
             yield {"event": "error", "data": json.dumps({"error": str(e)})}
     
     return EventSourceResponse(event_generator())
+
             
