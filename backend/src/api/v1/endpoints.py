@@ -10,6 +10,7 @@ router = APIRouter()
 
 run_config={}
 
+
 @router.get('/graph/stream/create', response_model=GraphResponse)
 def create_graph_streaming(request: StartRequest):
     thread_id = str(uuid4())
