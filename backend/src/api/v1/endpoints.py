@@ -22,6 +22,7 @@ def create_graph_streaming(request: StartRequest):
         thread_id=thread_id
     )
 
+
 @router.get('/graph/stream/{thread_id}')
 async def stream_graph(request: Request, thread_id: str):
     if thread_id not in run_config:
@@ -52,5 +53,4 @@ async def stream_graph(request: Request, thread_id: str):
     
     return EventSourceResponse(event_generator())
 
-            
             
