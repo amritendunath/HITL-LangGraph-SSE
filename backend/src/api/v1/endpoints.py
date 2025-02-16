@@ -11,7 +11,7 @@ router = APIRouter()
 run_config={}
 
 
-@router.get('/graph/stream/create', response_model=GraphResponse)
+@router.post('/graph/stream/create', response_model=GraphResponse)
 def create_graph_streaming(request: StartRequest):
     thread_id = str(uuid4())
 
@@ -39,8 +39,7 @@ async def stream_graph(request: Request, thread_id: str):
         yield {"data": init_data}
 
         try:
-            # pass
-            for msg, metadata in graph.astream(input_state, config):
+            for msg, metadata in graph.stream(input_state, config):
                 if await request.is_disconnected():
                     logger.info("DEBUG : Client disconnected")
                 if metadata.get('langgraph_node') in ['assistant_draft']:
@@ -49,7 +48,7 @@ async def stream_graph(request: Request, thread_id: str):
                     yield {"event": "token", "data": token_data}
 
         except Exception as e:
-            logger.error()
+            logger.error(f"Exception in event_generator: {e}")
             yield {"event": "error", "data": json.dumps({"error": str(e)})}
     
     return EventSourceResponse(event_generator())
